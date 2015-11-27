@@ -1,0 +1,46 @@
+Last update : 27 Nov 2015
+
+============ High Priority ===============
+
+enchantment npc
+http://herc.ws/board/topic/11252-custom-enchantment-npc-problem/
+
+update setmobdata
+- http://herc.ws/board/topic/11097-setmobdata-getmobdata/
+
+add pcblock script command
+- https://github.com/HerculesWS/Hercules/pull/842
+
+readparam accept constants pull request
+- https://github.com/rathena/rathena/commit/e112fc1c500feb5c705fdb5990f142c507fd384a
+
+============ Medium Priority ==============
+
+replicate Emistry's mvp ladder script
+- http://vk-ro.com/forum/index.php?/topic/175-elite-mvp-ladder/
+
+update SQL dota announcement ladder
+- http://herc.ws/board/topic/11206-pvp-ladder-discount-point-at-die/
+
+rewrite poring punch event
+- http://herc.ws/board/topic/11231-poring-punch-problem/
+origin - https://www.eathena.ws/board/index.php?showtopic=253686
+
+============= Low Priority =================
+
+cell_pvp patch->plugin
+- http://herc.ws/board/topic/8587-cell-pvp-pk-area-patch/
+
+battleground emblem plugin
+- http://herc.ws/board/topic/4704-custom-battlegrounds-is-it-possible/
+
+OnPCUseSkillEvent plugin ( rewrite this as doevent <npc name>::OnUseSkillx label )
+- http://herc.ws/board/topic/11235-qis-it-possible-to-get-the-monster-skill/#entry66282
+- http://herc.ws/board/topic/11273-requesting-simple-script/
+origin - https://www.eathena.ws/board/index.php?showtopic=274088
+
+charms plugin
+- http://herc.ws/board/topic/10254-charms-item-gift-effect-while-in-inventory/
+origin - https://www.eathena.ws/board/index.php?s=&showtopic=246304&view=findpost&p=1503344
+
+OnPCAttackEvent plugin ( rewrite this as QUEUEOPT_ATTACK )
