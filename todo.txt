@@ -16,6 +16,11 @@ readparam accept constants pull request
 
 ============ Medium Priority ==============
 
+update Mac Address patch into plugin
+- http://herc.ws/board/topic/4643-get-last-mac-address/
+then rewrite that guild item giver using mac address
+- http://herc.ws/board/topic/11260-guild-pack/
+
 replicate Emistry's mvp ladder script
 - http://vk-ro.com/forum/index.php?/topic/175-elite-mvp-ladder/
 
@@ -44,3 +49,5 @@ charms plugin
 origin - https://www.eathena.ws/board/index.php?s=&showtopic=246304&view=findpost&p=1503344
 
 OnPCAttackEvent plugin ( rewrite this as QUEUEOPT_ATTACK )
+
+OnPCIdleEvent plugin ( rewrite this as QUEUEOPT_IDLE )
