@@ -46,3 +46,6 @@ OnPCIdleEvent plugin ( rewrite this as QUEUEOPT_IDLE )
 
 write a *breakitem script comand + try to do some item_data plugin
 - http://herc.ws/board/topic/11299-rweapon-breaking-after-an-hour-npc/
+
+EXTRA_STATUS_POINTS plugin
+- http://herc.ws/board/topic/11244-help-monster-kill/?p=66565
