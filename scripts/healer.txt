@@ -73,7 +73,7 @@ prontera,155,185,5	script	Healer	1_F_MARIA,{
 	else if ( Upper & 1 && BaseLevel < 70 )
 		.@spirit = SL_HIGH;
 	if ( .@spirit ) {
-		sc_start4 SC_SOULLINK, 240000, 1, .@spirit,0,0;
+		sc_start4 SC_SOULLINK, .@time, 1, .@spirit,0,0;
 		skilleffect .@spirit, 1;
 	}
 
