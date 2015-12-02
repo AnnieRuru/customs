@@ -17,7 +17,7 @@
 
 prontera,155,185,5	script	Healer	1_F_MARIA,{
 
-	.@cooldown = 60; // how many seconds before the player can heal again
+	.@cooldown = 10; // how many seconds before the player can heal again
 
 	if ( @heal_cooldown + .@cooldown > gettimetick(2) ) {
 		dispbottom "You need wait for " + ( @heal_cooldown + .@cooldown - gettimetick(2) ) + " seconds.";
