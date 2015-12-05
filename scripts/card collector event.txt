@@ -10,7 +10,7 @@
 //= Every hour, the npc ask for a random card.
 //= If the player has the card and give to this npc, will get rewards
 //===== Topic ================================================
-//= http://herc.ws/board/topic/11182-dressing-room-npc/
+//= http://herc.ws/board/topic/11367-card-collector/
 //===== Additional Comments: =================================
 //= found this in rathena script request, dump in hercules script release
 //============================================================
