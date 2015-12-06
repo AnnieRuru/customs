@@ -3,7 +3,7 @@
 //===== By: ==================================================
 //= AnnieRuru
 //===== Current Version: =====================================
-//= 1.0
+//= 1.0a
 //===== Compatible With: ===================================== 
 //= Hercules 2015-12-05
 //===== Description: =========================================
@@ -49,7 +49,7 @@ OnMinute00: // Put all your start timer here
 	while ( .bosscardid[.@i] != .look4card && .@i < .bosscards ) .@i++;
 	if ( .@i < .bosscards ) {
 		while ( .mvpcardid[.@j] != .look4card && .@j < .mvpcards ) .@j++;
-		if ( .@j < mvpcards )
+		if ( .@j < .mvpcards )
 			.checkboss = 2;
 		else
 			.checkboss = 1;
