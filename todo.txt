@@ -1,4 +1,4 @@
-Last update : 2 Dec 2015
+Last update : 11 Dec 2015
 
 ============ High Priority ===============
 
@@ -67,8 +67,3 @@ make the quest log system without using database, invent new :-
 - *delquestmob <quest ID>, <MobID>; // return 1 on success, return 0 if there are no mobid in this quest
 - *addquesttimelimit <quest ID>, <seconds>; // add time limit to the quest ID, if <seconds> is 0, it remove the time limit
 - Drops: ... I need to figure out what this do
-
-code a new SC_ADDSTATKILLMOB
-- http://herc.ws/board/topic/11301-help-monster-kill-pt2/?p=66672
---- sc_start4 SC_ADDSTATKILLMOB, 10000, PORING, 100, 1, bStr;
---- in 10 seconds, kill a poring, 100% chance to gain 1 str stat 
