@@ -1,0 +1,166 @@
+ doc/script_commands.txt |  5 +++++
+ src/map/clif.c          |  6 ++++++
+ src/map/npc.c           |  9 +++++++++
+ src/map/pc.h            |  2 ++
+ src/map/script.c        | 14 ++++++++++++++
+ src/map/script.h        | 22 ++++++++++++----------
+ 6 files changed, 48 insertions(+), 10 deletions(-)
+
+diff --git a/doc/script_commands.txt b/doc/script_commands.txt
+index db851128f..8900e6d15 100644
+--- a/doc/script_commands.txt
++++ b/doc/script_commands.txt
+@@ -6322,12 +6322,17 @@ The <type> listed are a bit mask of the following:
+ 	PCBLOCK_IMMUNE
+ 	PCBLOCK_SITSTAND
+ 	PCBLOCK_COMMANDS
++	PCBLOCK_NPCCLICK
++	PCBLOCK_EMOTION
+ 
+ Examples:
+ 
+ // Make the current attached player invulnerable, same as @monsterignore
+ 	setpcblock(PCBLOCK_IMMUNE, true);
+ 
++// Prevents the current char from using npc, shops or warp portals
++	setpcblock(PCBLOCK_NPCCLICK, true);
++
+ // Prevents the current char from attacking or using skills
+ 	setpcblock(PCBLOCK_ATTACK|PCBLOCK_SKILL, true);
+ 
+diff --git a/src/map/clif.c b/src/map/clif.c
+index 86b130e88..aadf9420e 100644
+--- a/src/map/clif.c
++++ b/src/map/clif.c
+@@ -8634,6 +8634,12 @@ static void clif_emotion(struct block_list *bl, int type)
+ 
+ 	nullpo_retv(bl);
+ 
++	if (bl->type == BL_PC) {
++		struct map_session_data *sd = BL_CAST(BL_PC, bl);
++		if (sd->block_action.emotion)
++			return;
++	}
++
+ 	WBUFW(buf,0)=0xc0;
+ 	WBUFL(buf,2)=bl->id;
+ 	WBUFB(buf,6)=type;
+diff --git a/src/map/npc.c b/src/map/npc.c
+index 61341744d..7e74b7c93 100644
+--- a/src/map/npc.c
++++ b/src/map/npc.c
+@@ -978,6 +978,9 @@ static int npc_touch_areanpc(struct map_session_data *sd, int16 m, int16 x, int1
+ 		return 1;
+ #endif // 0
+ 
++	if (sd->block_action.npcclick)
++		return 1;
++
+ 	for(i=0;i<map->list[m].npc_num;i++) {
+ 		if (map->list[m].npc[i]->option&OPTION_INVISIBLE) {
+ 			f=0; // a npc was found, but it is disabled; don't print warning
+@@ -1059,6 +1062,9 @@ static int npc_untouch_areanpc(struct map_session_data *sd, int16 m, int16 x, in
+ 	nullpo_retr(1, sd);
+ 	Assert_retr(1, m >= 0 && m < map->count);
+ 
++	if (sd->block_action.npcclick)
++		return 1;
++
+ 	if (!sd->areanpc_id)
+ 		return 0;
+ 
+@@ -1284,6 +1290,9 @@ static int npc_click(struct map_session_data *sd, struct npc_data *nd)
+ {
+ 	nullpo_retr(1, sd);
+ 
++	if (sd->block_action.npcclick)
++		return 1;
++
+ 	// This usually happens when the player clicked on a NPC that has the view id
+ 	// of a mob, to activate this kind of npc it's needed to be in a 2,2 range
+ 	// from it. If the OnTouch area of a npc, coincides with the 2,2 range of
+diff --git a/src/map/pc.h b/src/map/pc.h
+index b2069d4df..8e0fa07f2 100644
+--- a/src/map/pc.h
++++ b/src/map/pc.h
+@@ -629,6 +629,8 @@ END_ZEROED_BLOCK;
+ 		unsigned immune   : 1;
+ 		unsigned sitstand : 1;
+ 		unsigned commands : 1;
++		unsigned npcclick : 1;
++		unsigned emotion  : 1;
+ 	} block_action;
+ 
+ 	/* Achievement System */
+diff --git a/src/map/script.c b/src/map/script.c
+index 7578fcdcc..4ed34c421 100644
+--- a/src/map/script.c
++++ b/src/map/script.c
+@@ -18518,6 +18518,12 @@ static BUILDIN(setpcblock)
+ 	if ((type & PCBLOCK_COMMANDS) != 0)
+ 		sd->block_action.commands = state;
+ 
++	if ((type & PCBLOCK_NPCCLICK) != 0)
++		sd->block_action.npcclick = state;
++
++	if ((type & PCBLOCK_EMOTION) != 0)
++		sd->block_action.emotion = state;
++
+ 	return true;
+ }
+ 
+@@ -18555,6 +18561,12 @@ static BUILDIN(checkpcblock)
+ 	if (sd->block_action.commands != 0)
+ 		retval |= PCBLOCK_COMMANDS;
+ 
++	if (sd->block_action.npcclick != 0)
++		retval |= PCBLOCK_NPCCLICK;
++
++	if (sd->block_action.emotion != 0)
++		retval |= PCBLOCK_EMOTION;
++
+ 	script_pushint(st, retval);
+ 	return true;
+ }
+@@ -26180,6 +26192,8 @@ static void script_hardcoded_constants(void)
+ 	script->set_constant("PCBLOCK_IMMUNE",   PCBLOCK_IMMUNE,   false, false);
+ 	script->set_constant("PCBLOCK_SITSTAND", PCBLOCK_SITSTAND, false, false);
+ 	script->set_constant("PCBLOCK_COMMANDS", PCBLOCK_COMMANDS, false, false);
++	script->set_constant("PCBLOCK_NPCCLICK", PCBLOCK_NPCCLICK, false, false);
++	script->set_constant("PCBLOCK_EMOTION",  PCBLOCK_EMOTION,  false, false);
+ 
+ 	script->constdb_comment("private airship responds");
+ 	script->set_constant("P_AIRSHIP_NONE", P_AIRSHIP_NONE, false, false);
+diff --git a/src/map/script.h b/src/map/script.h
+index 549ad3284..686b8bd5e 100644
+--- a/src/map/script.h
++++ b/src/map/script.h
+@@ -464,16 +464,18 @@ enum script_iteminfo_types {
+  * Player blocking actions related flags.
+  */
+ enum pcblock_action_flag {
+-	PCBLOCK_NONE     = 0x00,
+-	PCBLOCK_MOVE     = 0x01,
+-	PCBLOCK_ATTACK   = 0x02,
+-	PCBLOCK_SKILL    = 0x04,
+-	PCBLOCK_USEITEM  = 0x08,
+-	PCBLOCK_CHAT     = 0x10,
+-	PCBLOCK_IMMUNE   = 0x20,
+-	PCBLOCK_SITSTAND = 0x40,
+-	PCBLOCK_COMMANDS = 0x80,
+-	PCBLOCK_ALL      = 0xFF,
++	PCBLOCK_NONE     = 0x000,
++	PCBLOCK_MOVE     = 0x001,
++	PCBLOCK_ATTACK   = 0x002,
++	PCBLOCK_SKILL    = 0x004,
++	PCBLOCK_USEITEM  = 0x008,
++	PCBLOCK_CHAT     = 0x010,
++	PCBLOCK_IMMUNE   = 0x020,
++	PCBLOCK_SITSTAND = 0x040,
++	PCBLOCK_COMMANDS = 0x080,
++	PCBLOCK_NPCCLICK = 0x100,
++	PCBLOCK_EMOTION  = 0x200,
++	PCBLOCK_ALL      = 0x3FF,
+ };
+ 
+ /**
