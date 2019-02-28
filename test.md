@@ -5,6 +5,8 @@
    - asd
       - asdas
          - zxc
+- [`*setarray`](#setarray)
+- [`*setunitdata`](#setunitdata)
 
 ### Step 1
 This is Step no.1
@@ -16,8 +18,15 @@ This is Step no.2
 
 blah  
 blah  
+
+#### `*setarray`
+
 blah  
 blah  
+
+`*setunitdata`
+--------------
+
 blah  
 blah  
 blah  
